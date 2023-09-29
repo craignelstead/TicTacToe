@@ -14,11 +14,28 @@ const GameBoard = (function(doc) {
         //Add event listener to each square
         //Event listener will check the current status of each square
         currentSquare.addEventListener('click', function() {
-            //Print the row and column
-            //console.log(`Row ${gridRow} Col ${gridCol}`);
-
             //Check if square is X, O, or blank
             gamePlay.testPlacement(gridSquare[squareNum]);
+        });
+
+        //Add event listener to add hover effect to blank square on hover
+        currentSquare.addEventListener('mouseover', function() {
+            if (currentSquare.textContent === '') {
+                //Add class
+                currentSquare.classList.add('hoverClass');
+
+                //Show preview
+                currentSquare.textContent = gamePlay.checkTurn();
+            }
+        });
+
+        //Add event listener to remove hover effect from each square on end hover
+        currentSquare.addEventListener('mouseleave', function() {
+            if (gridSquare[squareNum].gridSelection === '') {
+                currentSquare.textContent = '';
+            }
+
+            currentSquare.classList.remove('hoverClass');
         });
 
         return {
@@ -61,6 +78,11 @@ const gamePlay = (function() {
     //Default so player X goes first
     let currentTurn = 'X';
 
+    //Check whose turn it is
+    function checkTurn() {
+        return currentTurn;
+    }
+
     //Change turn to other player
     function changeTurn() {
         if (currentTurn === 'X') {currentTurn = 'O'}
@@ -71,6 +93,7 @@ const gamePlay = (function() {
     function testPlacement(placement) {
         if (placement.gridSelection == '') {
             updateSquare(placement);
+            checkForWin();
             changeTurn();
             //console.log('The spot is clear');
         }
@@ -79,12 +102,21 @@ const gamePlay = (function() {
         }
     }
 
-    //Update the square
+    //Update the object's gridSelection, also update the grid textContent
     function updateSquare(square) {
         square.gridSelection = currentTurn;
         let id = 'ttt' + square.squareNum;
         let thisSquare = document.getElementById(id);
+
+        //Update text content
         thisSquare.textContent = currentTurn;
+
+        //Remove hover effect when selection is made
+        thisSquare.classList.remove('hoverClass');
+    }
+
+    function checkForWin() {
+
     }
 
     return {
@@ -94,6 +126,7 @@ const gamePlay = (function() {
         changeTurn,
         testPlacement,
         updateSquare,
+        checkTurn,
     }
 })();
 
