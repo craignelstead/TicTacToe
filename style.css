@@ -1,6 +1,7 @@
 :root {
     margin: 0;
     padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #tttboard {
@@ -15,4 +16,13 @@
 
 .tttsquare {
     border: solid 2px black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.hoverClass {
+    opacity: 0.3;
 }
