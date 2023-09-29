@@ -5,30 +5,26 @@ const GameBoard = (function(doc) {
 
     //Creates an object for each square using factory function
     //Contains Row, Column, and current selection (null by default)
-    const squareFactory = (currentSquare) => {
+    const squareFactory = (currentSquare, placeInArr) => {
         const gridRow = currentSquare.getAttribute('data-row');
         const gridCol = currentSquare.getAttribute('data-col');
+        const squareNum = placeInArr;
         let gridSelection = currentSquare.textContent;
-
-        //Method to see current selection of square
-        const checkSquareStatus = () => {
-            console.log(gridSelection);
-        }
 
         //Add event listener to each square
         //Event listener will check the current status of each square
         currentSquare.addEventListener('click', function() {
-            console.log(`Row ${gridRow} Col ${gridCol}`);
-            checkSquareStatus(currentSquare);
+            //Print the row and column
+            //console.log(`Row ${gridRow} Col ${gridCol}`);
 
-            currentSquare.textContent = gamePlay.currentTurn;
-            gridSelection = currentSquare.textContent;
-            //gridSquare[currentSquare].gridSelection = gamePlay.currentTurn;
+            //Check if square is X, O, or blank
+            gamePlay.testPlacement(gridSquare[squareNum]);
         });
 
         return {
             gridRow,
             gridCol,
+            squareNum,
             gridSelection,
         }
     }
@@ -37,7 +33,7 @@ const GameBoard = (function(doc) {
     //into gridSqaure array
     const gridSquare = [];
     for (let i = 0; i < squares.length; i++) {
-        gridSquare.push(squareFactory(squares[i]));
+        gridSquare.push(squareFactory(squares[i], i));
     }
 
     return {
@@ -47,7 +43,7 @@ const GameBoard = (function(doc) {
 
 //Factory function to create each player
 const Player = (name) => {
-    const getName = () => name;
+    function getName() {console.log(`Hello ${name}`);}
     let score = 0;
 
     return {
@@ -66,22 +62,38 @@ const gamePlay = (function() {
     let currentTurn = 'X';
 
     //Change turn to other player
-    const changeTurn = () => {
+    function changeTurn() {
         if (currentTurn === 'X') {currentTurn = 'O'}
         else {currentTurn = 'X'}
     }
     
     //Check if valid placement
-    const testPlacement = () => {
-        if (this.gridSelection === '') {
-            console.log(this.gridSelection);
+    function testPlacement(placement) {
+        if (placement.gridSelection == '') {
+            updateSquare(placement);
+            changeTurn();
+            //console.log('The spot is clear');
         }
+        else {
+            //console.log('Spot taken')
+        }
+    }
+
+    //Update the square
+    function updateSquare(square) {
+        square.gridSelection = currentTurn;
+        let id = 'ttt' + square.squareNum;
+        let thisSquare = document.getElementById(id);
+        thisSquare.textContent = currentTurn;
     }
 
     return {
         playerX,
         playerO,
         currentTurn,
+        changeTurn,
+        testPlacement,
+        updateSquare,
     }
 })();
 
