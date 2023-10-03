@@ -111,6 +111,7 @@ const gamePlay = (function() {
 
     //Update the object's gridSelection, also update the grid textContent
     function updateSquare(square) {
+        if (isAVictory === true) {return}
         square.gridSelection = currentTurn;
         let id = 'ttt' + square.squareNum;
         let thisSquare = document.getElementById(id);
@@ -122,6 +123,7 @@ const gamePlay = (function() {
         thisSquare.classList.remove('hoverClass');
     }
 
+    //Show preview of placement if there is no victor already
     function showHover(square) {
         if (isAVictory === false) {
             //Add class
@@ -153,6 +155,35 @@ const gamePlay = (function() {
                    victory(checkStack);
             }
         }
+
+        //Check for diagonal victory top left to bottom right
+        if ((GameBoard.gridSquare[0].gridSelection === 
+                GameBoard.gridSquare[4].gridSelection) &&
+            (GameBoard.gridSquare[4].gridSelection === 
+                GameBoard.gridSquare[8].gridSelection) &&
+            GameBoard.gridSquare[0].gridSelection != ''){
+                let diagonalCombo = [
+                    GameBoard.gridSquare[0],
+                    GameBoard.gridSquare[4],
+                    GameBoard.gridSquare[8]
+                ]
+                victory(diagonalCombo);
+        }
+
+        //Check for diagonal victory bottom left to top right
+        if ((GameBoard.gridSquare[6].gridSelection === 
+            GameBoard.gridSquare[4].gridSelection) &&
+        (GameBoard.gridSquare[4].gridSelection === 
+            GameBoard.gridSquare[2].gridSelection) &&
+        GameBoard.gridSquare[6].gridSelection != ''){
+            let diagonalCombo = [
+                GameBoard.gridSquare[6],
+                GameBoard.gridSquare[4],
+                GameBoard.gridSquare[2]
+            ]
+            victory(diagonalCombo);
+    }
+
     }
 
     //Called if victory is detected
