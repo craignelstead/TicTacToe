@@ -49,8 +49,16 @@ const GameBoard = (function(doc) {
         gridSquare.push(squareFactory(squares[i], i));
     }
 
+    //Update board to show the winning combination
+    function showWinningCombo(winningSpaces) {
+        winningSpaces.forEach(space => {
+            squares[space.squareNum].classList.add('winningCombo');
+        });
+    }
+
     return {
         gridSquare,
+        showWinningCombo,
     };
 })(document);
 
@@ -140,16 +148,26 @@ const gamePlay = (function() {
             //If all the squares in the current row or column match and are not blank
             if (checkStack[0].gridSelection == checkStack[1].gridSelection &&
                 checkStack[1].gridSelection == checkStack[2].gridSelection &&
-                checkStack[0].gridSelection != '') {
-                   victory();
+                checkStack[0].gridSelection != '' &&
+                isAVictory === false) {
+                   victory(checkStack);
             }
         }
     }
 
-    function victory() {
+    //Called if victory is detected
+    function victory(winningSpaces) {
+        //Set victory status to true
         isAVictory = true;
+
+        //Update square appearance to show winning combo
+        GameBoard.showWinningCombo(winningSpaces);
+
+        //Add to player scores
         if (currentTurn === 'X') {playerX.score ++}
         if (currentTurn === 'O') {playerO.score ++}
+
+        //Show results
         alert(`Player ${currentTurn} wins!`);
     }
 
