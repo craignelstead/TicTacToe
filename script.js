@@ -75,6 +75,9 @@ const gamePlay = (function() {
     const playerX = Player('X');
     const playerO = Player('O');
 
+    //Set victory status to false by default
+    let isAVictory = false;
+
     //Default so player X goes first
     let currentTurn = 'X';
 
@@ -92,7 +95,8 @@ const gamePlay = (function() {
     //Check if valid placement
     //If placement is valid, update the square, check for victory, and change turn
     function testPlacement(placement) {
-        if (placement.gridSelection == '') {
+        if (placement.gridSelection == '' &&
+            isAVictory === false) {
             updateSquare(placement);
             checkForWin();
             changeTurn();
@@ -136,13 +140,17 @@ const gamePlay = (function() {
     }
 
     function victory() {
-        alert('Victory!');
+        isAVictory = true;
+        console.log(isAVictory);
+        alert(`Player ${currentTurn} wins!`);
+
     }
 
     return {
         playerX,
         playerO,
         currentTurn,
+        isAVictory,
         changeTurn,
         testPlacement,
         updateSquare,
