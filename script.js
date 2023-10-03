@@ -90,15 +90,13 @@ const gamePlay = (function() {
     }
     
     //Check if valid placement
+    //If placement is valid, update the square, check for victory, and change turn
     function testPlacement(placement) {
         if (placement.gridSelection == '') {
             updateSquare(placement);
             checkForWin();
             changeTurn();
             //console.log('The spot is clear');
-        }
-        else {
-            //console.log('Spot taken')
         }
     }
 
@@ -115,8 +113,30 @@ const gamePlay = (function() {
         thisSquare.classList.remove('hoverClass');
     }
 
+    //Check if the last placement was a winning move
     function checkForWin() {
+        //Loop through each row and column and see if all three squares match
+        for (let i = 1; i <= 3; i++) {
+            checkRowsAndCols('gridRow', i);
+            checkRowsAndCols('gridCol', i);
+        }
 
+        function checkRowsAndCols(direction, num) {
+            //Filter array to check each row or column
+            let checkStack = GameBoard.gridSquare.filter(function (sq) {
+                return sq[direction] == `${num}`;
+            });
+            //If all the squares in the current row or column match and are not blank
+            if (checkStack[0].gridSelection == checkStack[1].gridSelection &&
+                checkStack[1].gridSelection == checkStack[2].gridSelection &&
+                checkStack[0].gridSelection != '') {
+                   victory();
+            }
+        }
+    }
+
+    function victory() {
+        alert('Victory!');
     }
 
     return {
