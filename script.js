@@ -21,11 +21,7 @@ const GameBoard = (function(doc) {
         //Add event listener to add hover effect to blank square on hover
         currentSquare.addEventListener('mouseover', function() {
             if (currentSquare.textContent === '') {
-                //Add class
-                currentSquare.classList.add('hoverClass');
-
-                //Show preview
-                currentSquare.textContent = gamePlay.checkTurn();
+                gamePlay.showHover(currentSquare);
             }
         });
 
@@ -65,6 +61,7 @@ const Player = (name) => {
 
     return {
         getName,
+        score,
     }
 }
 
@@ -117,6 +114,15 @@ const gamePlay = (function() {
         thisSquare.classList.remove('hoverClass');
     }
 
+    function showHover(square) {
+        if (isAVictory === false) {
+            //Add class
+            square.classList.add('hoverClass');
+            //Show preview
+            square.textContent = checkTurn();
+        }
+    }
+
     //Check if the last placement was a winning move
     function checkForWin() {
         //Loop through each row and column and see if all three squares match
@@ -125,6 +131,7 @@ const gamePlay = (function() {
             checkRowsAndCols('gridCol', i);
         }
 
+        //Go through each row or column and compare gridSelection
         function checkRowsAndCols(direction, num) {
             //Filter array to check each row or column
             let checkStack = GameBoard.gridSquare.filter(function (sq) {
@@ -141,9 +148,9 @@ const gamePlay = (function() {
 
     function victory() {
         isAVictory = true;
-        console.log(isAVictory);
+        if (currentTurn === 'X') {playerX.score ++}
+        if (currentTurn === 'O') {playerO.score ++}
         alert(`Player ${currentTurn} wins!`);
-
     }
 
     return {
@@ -154,7 +161,7 @@ const gamePlay = (function() {
         changeTurn,
         testPlacement,
         updateSquare,
+        showHover,
         checkTurn,
     }
 })();
-
