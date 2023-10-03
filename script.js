@@ -150,8 +150,7 @@ const gamePlay = (function() {
             //If all the squares in the current row or column match and are not blank
             if (checkStack[0].gridSelection == checkStack[1].gridSelection &&
                 checkStack[1].gridSelection == checkStack[2].gridSelection &&
-                checkStack[0].gridSelection != '' &&
-                isAVictory === false) {
+                checkStack[0].gridSelection != '' ) {
                    victory(checkStack);
             }
         }
@@ -188,15 +187,17 @@ const gamePlay = (function() {
 
     //Called if victory is detected
     function victory(winningSpaces) {
-        //Set victory status to true
-        isAVictory = true;
-
         //Update square appearance to show winning combo
         GameBoard.showWinningCombo(winningSpaces);
 
         //Add to player scores
-        if (currentTurn === 'X') {playerX.score ++}
-        if (currentTurn === 'O') {playerO.score ++}
+        if (currentTurn === 'X' && isAVictory === false) {playerX.score ++}
+        if (currentTurn === 'O' && isAVictory === false) {playerO.score ++}
+        console.log(`X: ${playerX.score}`);
+        console.log(`O: ${playerO.score}`);
+
+        //Set victory status to true
+        isAVictory = true;
 
         //Show results
         alert(`Player ${currentTurn} wins!`);
