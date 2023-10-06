@@ -62,13 +62,37 @@ const GameBoard = (function(doc) {
     };
 })(document);
 
+//Display module
+const DisplayGUI = (function(doc) {
+    //Variables for display divs, inputs, and scores
+    const newGame = doc.getElementById('newgame');
+    const scoreBoard = doc.getElementById('scoreboard');
+    const player1Input = doc.getElementById('player1');
+    const player2Input = doc.getElementById('player2');
+    const player1Display = doc.getElementById('player1score');
+    const player2Display = doc.getElementById('player2score');
+
+    function toggleDivs(div1, div2) {
+        div1.classList.add('hiddenDiv');
+        div2.classList.remove('hiddenDiv');
+    }
+
+    //newGame.addEventListener('click', () => gamePlay.startGame());
+
+    toggleDivs(scoreBoard, newGame);
+
+    return {
+        player1Input,
+        player2Input,
+    }
+})(document);
+
 //Factory function to create each player
 const Player = (name) => {
-    function getName() {console.log(`Hello ${name}`);}
     let score = 0;
 
     return {
-        getName,
+        name,
         score,
     }
 }
@@ -76,9 +100,18 @@ const Player = (name) => {
 //Game play module
 const gamePlay = (function() {
 
+    //Start Game
+    // function startGame() {
+    //     createPlayers();
+    // }
+
+    //createPlayers();
+
     //Create players
-    const playerX = Player('X');
-    const playerO = Player('O');
+    //function createPlayers() {
+        const playerX = Player(DisplayGUI.player1Input.value);
+        const playerO = Player(DisplayGUI.player2Input.value);
+    //}
 
     //Set victory status to false by default
     let isAVictory = false;
@@ -105,7 +138,6 @@ const gamePlay = (function() {
             updateSquare(placement);
             checkForWin();
             changeTurn();
-            //console.log('The spot is clear');
         }
     }
 
@@ -171,17 +203,17 @@ const gamePlay = (function() {
 
         //Check for diagonal victory bottom left to top right
         if ((GameBoard.gridSquare[6].gridSelection === 
-            GameBoard.gridSquare[4].gridSelection) &&
-        (GameBoard.gridSquare[4].gridSelection === 
-            GameBoard.gridSquare[2].gridSelection) &&
-        GameBoard.gridSquare[6].gridSelection != ''){
-            let diagonalCombo = [
-                GameBoard.gridSquare[6],
-                GameBoard.gridSquare[4],
-                GameBoard.gridSquare[2]
-            ]
-            victory(diagonalCombo);
-    }
+                GameBoard.gridSquare[4].gridSelection) &&
+            (GameBoard.gridSquare[4].gridSelection === 
+                GameBoard.gridSquare[2].gridSelection) &&
+            GameBoard.gridSquare[6].gridSelection != ''){
+                let diagonalCombo = [
+                    GameBoard.gridSquare[6],
+                    GameBoard.gridSquare[4],
+                    GameBoard.gridSquare[2]
+                ]
+                victory(diagonalCombo);
+        }
 
     }
 
@@ -193,14 +225,14 @@ const gamePlay = (function() {
         //Add to player scores
         if (currentTurn === 'X' && isAVictory === false) {playerX.score ++}
         if (currentTurn === 'O' && isAVictory === false) {playerO.score ++}
-        console.log(`X: ${playerX.score}`);
+        console.log(`${playerX.name}: ${playerX.score}`);
         console.log(`O: ${playerO.score}`);
 
         //Set victory status to true
         isAVictory = true;
 
         //Show results
-        alert(`Player ${currentTurn} wins!`);
+        //alert(`Player ${currentTurn} wins!`);
     }
 
     return {
@@ -208,6 +240,7 @@ const gamePlay = (function() {
         playerO,
         currentTurn,
         isAVictory,
+        //createPlayers,
         changeTurn,
         testPlacement,
         updateSquare,

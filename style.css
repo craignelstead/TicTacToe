@@ -4,6 +4,19 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+body {
+    display: grid;
+    grid-template-rows: 1fr 2fr;
+}
+
+#gamecontrol {
+    background-color: aqua;
+}
+
+.hiddenDiv {
+    visibility: hidden;
+}
+
 #tttboard {
     width: 300px;
     height: 300px;
@@ -31,3 +44,22 @@
 .winningCombo {
     color: red;
 }
+
+/* .winningCombo::after {
+    animation: 2s anim-popoutin ease;
+} */
+
+  /* @keyframes anim-popoutin {
+    0% {
+      transform: scale(0);
+    }
+    25% {
+      transform: scale(2);
+    }
+    50% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  } */
