@@ -56,30 +56,69 @@ const GameBoard = (function(doc) {
         });
     }
 
+    //Assign hidden class to ttt board on page load
+    const playingArea = doc.getElementById('tttboard');
+    playingArea.classList.add('hiddenDiv');
+
     return {
         gridSquare,
         showWinningCombo,
+        playingArea,
     };
 })(document);
 
 //Display module
 const DisplayGUI = (function(doc) {
     //Variables for display divs, inputs, and scores
-    const newGame = doc.getElementById('newgame');
+    const setupGame = doc.getElementById('setupGame');
+    const startGame = doc.getElementById('startGame');
+    const playAgain = doc.getElementById('playAgain');
     const scoreBoard = doc.getElementById('scoreboard');
     const player1Input = doc.getElementById('player1');
     const player2Input = doc.getElementById('player2');
     const player1Display = doc.getElementById('player1score');
     const player2Display = doc.getElementById('player2score');
 
+    playAgain.classList.add('hiddenDiv');
+
+    //Sets div1 to hidden, sets div2 to visible
     function toggleDivs(div1, div2) {
         div1.classList.add('hiddenDiv');
         div2.classList.remove('hiddenDiv');
     }
 
-    //newGame.addEventListener('click', () => gamePlay.startGame());
+    //Add event listener to start game button
+    startGame.addEventListener('click', checkInputs);
 
-    toggleDivs(scoreBoard, newGame);
+
+    //Makes sure players names are valid
+    function checkInputs() {
+        if (player1Input.value.length <= 0 || player1Input.value.length > 20) {
+            player1Input.classList.add('invalidInput');
+        }
+        else {
+            player1Input.classList.remove('invalidInput');
+            gamePlay.playerX.name = player1Input.value;
+        }
+        if (player2Input.value.length <= 0 || player2Input.value.length > 20) {
+            player2Input.classList.add('invalidInput');
+        }
+        else {
+            player2Input.classList.remove('invalidInput');
+            gamePlay.playerO.name = player2Input.value;
+        }
+
+        if ((player1Input.value.length > 0 && player1Input.value.length <= 20) &&
+            (player2Input.value.length > 0 && player2Input.value.length <= 20)) {
+            GameBoard.playingArea.classList.remove('hiddenDiv');
+            toggleDivs(setupGame, scoreBoard);
+        }
+        else {
+            alert('Player names must be between 1 and 20 characters');
+        }
+    }
+
+    toggleDivs(scoreBoard, setupGame);
 
     return {
         player1Input,
@@ -88,7 +127,8 @@ const DisplayGUI = (function(doc) {
 })(document);
 
 //Factory function to create each player
-const Player = (name) => {
+const Player = (input) => {
+    let name = input;
     let score = 0;
 
     return {
@@ -100,18 +140,8 @@ const Player = (name) => {
 //Game play module
 const gamePlay = (function() {
 
-    //Start Game
-    // function startGame() {
-    //     createPlayers();
-    // }
-
-    //createPlayers();
-
-    //Create players
-    //function createPlayers() {
-        const playerX = Player(DisplayGUI.player1Input.value);
-        const playerO = Player(DisplayGUI.player2Input.value);
-    //}
+    const playerX = Player(DisplayGUI.player1Input.value);
+    const playerO = Player(DisplayGUI.player2Input.value);
 
     //Set victory status to false by default
     let isAVictory = false;
@@ -226,7 +256,7 @@ const gamePlay = (function() {
         if (currentTurn === 'X' && isAVictory === false) {playerX.score ++}
         if (currentTurn === 'O' && isAVictory === false) {playerO.score ++}
         console.log(`${playerX.name}: ${playerX.score}`);
-        console.log(`O: ${playerO.score}`);
+        console.log(`${playerO.name}: ${playerO.score}`);
 
         //Set victory status to true
         isAVictory = true;
@@ -240,7 +270,6 @@ const gamePlay = (function() {
         playerO,
         currentTurn,
         isAVictory,
-        //createPlayers,
         changeTurn,
         testPlacement,
         updateSquare,

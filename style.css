@@ -17,6 +17,10 @@ body {
     visibility: hidden;
 }
 
+.invalidInput {
+    border: solid 2px red;
+}
+
 #tttboard {
     width: 300px;
     height: 300px;
