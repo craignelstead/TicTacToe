@@ -60,10 +60,33 @@ const GameBoard = (function(doc) {
     const playingArea = doc.getElementById('tttboard');
     playingArea.classList.add('hiddenDiv');
 
+    //Clears game board display
+    function clearBoard() {
+        //Hide play again button
+        DisplayGUI.playAgain.classList.add('hiddenDiv');
+
+        //Set each object's gridSelection to blank and update display
+        gridSquare.forEach((obj) => {
+            obj.gridSelection = '';
+            let id = 'ttt' + obj.squareNum;
+            let thisSquare = doc.getElementById(id);
+
+            thisSquare.textContent = obj.gridSelection;
+        });
+
+        //Remove winningCombo from each square
+
+        //Set victory status to false and set turn to Player X
+        gamePlay.isAVictory = false;
+        gamePlay.changeTurn = 'X';
+
+    }
+
     return {
         gridSquare,
         showWinningCombo,
         playingArea,
+        clearBoard,
     };
 })(document);
 
@@ -79,6 +102,7 @@ const DisplayGUI = (function(doc) {
     const player1Display = doc.getElementById('player1score');
     const player2Display = doc.getElementById('player2score');
 
+    //Hide play again button by default
     playAgain.classList.add('hiddenDiv');
 
     //Sets div1 to hidden, sets div2 to visible
@@ -87,9 +111,9 @@ const DisplayGUI = (function(doc) {
         div2.classList.remove('hiddenDiv');
     }
 
-    //Add event listener to start game button
+    //Add event listener to start game button and play again button
     startGame.addEventListener('click', checkInputs);
-
+    playAgain.addEventListener('click', GameBoard.clearBoard);
 
     //Makes sure players names are valid
     function checkInputs() {
@@ -112,10 +136,18 @@ const DisplayGUI = (function(doc) {
             (player2Input.value.length > 0 && player2Input.value.length <= 20)) {
             GameBoard.playingArea.classList.remove('hiddenDiv');
             toggleDivs(setupGame, scoreBoard);
+            displayScores();
         }
         else {
             alert('Player names must be between 1 and 20 characters');
         }
+    }
+
+    function displayScores() {
+        player1Display.textContent = 
+            `${gamePlay.playerX.name}: ${gamePlay.playerX.score}`;
+        player2Display.textContent = 
+            `${gamePlay.playerO.name}: ${gamePlay.playerO.score}`;
     }
 
     toggleDivs(scoreBoard, setupGame);
@@ -123,6 +155,8 @@ const DisplayGUI = (function(doc) {
     return {
         player1Input,
         player2Input,
+        displayScores,
+        playAgain,
     }
 })(document);
 
@@ -140,6 +174,7 @@ const Player = (input) => {
 //Game play module
 const gamePlay = (function() {
 
+    //Initialize players
     const playerX = Player(DisplayGUI.player1Input.value);
     const playerO = Player(DisplayGUI.player2Input.value);
 
@@ -261,8 +296,11 @@ const gamePlay = (function() {
         //Set victory status to true
         isAVictory = true;
 
-        //Show results
-        //alert(`Player ${currentTurn} wins!`);
+        //Update score display
+        DisplayGUI.displayScores();
+
+        //Show play again button
+        DisplayGUI.playAgain.classList.remove('hiddenDiv');
     }
 
     return {
