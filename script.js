@@ -65,6 +65,11 @@ const GameBoard = (function(doc) {
         //Hide play again button
         DisplayGUI.playAgain.classList.add('hiddenDiv');
 
+        //Set victory status to false and set turn to Player X
+        gamePlay.isAVictory = false;
+        gamePlay.currentTurn = 'X';
+        console.log(gamePlay.currentTurn);
+
         //Set each object's gridSelection to blank and update display
         gridSquare.forEach((obj) => {
             obj.gridSelection = '';
@@ -75,11 +80,6 @@ const GameBoard = (function(doc) {
         });
 
         //Remove winningCombo from each square
-
-        //Set victory status to false and set turn to Player X
-        gamePlay.isAVictory = false;
-        gamePlay.changeTurn = 'X';
-
     }
 
     return {
@@ -208,7 +208,7 @@ const gamePlay = (function() {
 
     //Update the object's gridSelection, also update the grid textContent
     function updateSquare(square) {
-        if (isAVictory === true) {return}
+        if (gamePlay.isAVictory === true) {return}
         square.gridSelection = currentTurn;
         let id = 'ttt' + square.squareNum;
         let thisSquare = document.getElementById(id);
@@ -222,7 +222,7 @@ const gamePlay = (function() {
 
     //Show preview of placement if there is no victor already
     function showHover(square) {
-        if (isAVictory === false) {
+        if (gamePlay.isAVictory === false) {
             //Add class
             square.classList.add('hoverClass');
             //Show preview
@@ -288,13 +288,13 @@ const gamePlay = (function() {
         GameBoard.showWinningCombo(winningSpaces);
 
         //Add to player scores
-        if (currentTurn === 'X' && isAVictory === false) {playerX.score ++}
-        if (currentTurn === 'O' && isAVictory === false) {playerO.score ++}
+        if (currentTurn === 'X' && gamePlay.isAVictory === false) {playerX.score ++}
+        if (currentTurn === 'O' && gamePlay.isAVictory === false) {playerO.score ++}
         console.log(`${playerX.name}: ${playerX.score}`);
         console.log(`${playerO.name}: ${playerO.score}`);
 
         //Set victory status to true
-        isAVictory = true;
+        gamePlay.isAVictory = true;
 
         //Update score display
         DisplayGUI.displayScores();
