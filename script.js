@@ -68,7 +68,6 @@ const GameBoard = (function(doc) {
         //Set victory status to false and set turn to Player X
         gamePlay.isAVictory = false;
         gamePlay.currentTurn = 'X';
-        console.log(gamePlay.currentTurn);
 
         //Set each object's gridSelection to blank and update display
         gridSquare.forEach((obj) => {
@@ -76,10 +75,11 @@ const GameBoard = (function(doc) {
             let id = 'ttt' + obj.squareNum;
             let thisSquare = doc.getElementById(id);
 
+            //Set square text to blank
             thisSquare.textContent = obj.gridSelection;
-        });
-
-        //Remove winningCombo from each square
+            //Remove winningCombo from each square
+            thisSquare.classList.remove('winningCombo');
+        });        
     }
 
     return {
@@ -191,7 +191,7 @@ const gamePlay = (function() {
 
     //Change turn to other player
     function changeTurn() {
-        if (currentTurn === 'X') {currentTurn = 'O'}
+        if (currentTurn === 'X' && gamePlay.isAVictory === false) {currentTurn = 'O'}
         else {currentTurn = 'X'}
     }
     
@@ -280,6 +280,21 @@ const gamePlay = (function() {
                 victory(diagonalCombo);
         }
 
+        //Check for draw
+        checkForDraw();
+    }
+
+    //Check to see if there is no victory and all squares are filled
+    function checkForDraw() {
+        //No draw if victory is detected
+        if (gamePlay.isAVictory === true) {return}
+
+        //See if there are no blank squares after determining there is no victor
+        for (let i = 0; i < GameBoard.gridSquare.length; i++) {
+            if (GameBoard.gridSquare[i].gridSelection === '') {return}
+        }
+        //Show draw
+        DisplayGUI.playAgain.classList.remove('hiddenDiv');
     }
 
     //Called if victory is detected
