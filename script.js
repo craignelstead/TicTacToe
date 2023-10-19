@@ -67,7 +67,9 @@ const GameBoard = (function(doc) {
 
         //Set victory status to false and set turn to Player X
         gamePlay.isAVictory = false;
+        gamePlay.isADraw = false;
         gamePlay.currentTurn = 'X';
+        gamePlay.resetTurns();
 
         //Set each object's gridSelection to blank and update display
         gridSquare.forEach((obj) => {
@@ -178,8 +180,9 @@ const gamePlay = (function() {
     const playerX = Player(DisplayGUI.player1Input.value);
     const playerO = Player(DisplayGUI.player2Input.value);
 
-    //Set victory status to false by default
+    //Set victory & draw status to false by default
     let isAVictory = false;
+    let isADraw = false;
 
     //Default so player X goes first
     let currentTurn = 'X';
@@ -191,19 +194,30 @@ const gamePlay = (function() {
 
     //Change turn to other player
     function changeTurn() {
-        if (currentTurn === 'X' && gamePlay.isAVictory === false) {currentTurn = 'O'}
-        else {currentTurn = 'X'}
+        if (currentTurn === 'X' && 
+            gamePlay.isAVictory === false && gamePlay.isADraw === false) {
+                currentTurn = 'O';
+        }
+        else if (currentTurn === 'O' && 
+            gamePlay.isAVictory === false && gamePlay.isADraw === false) {
+                currentTurn = 'X';
+        }
     }
     
     //Check if valid placement
     //If placement is valid, update the square, check for victory, and change turn
     function testPlacement(placement) {
-        if (placement.gridSelection == '' &&
-            isAVictory === false) {
+        if (placement.gridSelection === '' &&
+            gamePlay.isAVictory === false) {
             updateSquare(placement);
             checkForWin();
             changeTurn();
         }
+    }
+
+    //Sets player turn back to X on new game
+    function resetTurns() {
+        currentTurn = 'X';
     }
 
     //Update the object's gridSelection, also update the grid textContent
@@ -293,7 +307,15 @@ const gamePlay = (function() {
         for (let i = 0; i < GameBoard.gridSquare.length; i++) {
             if (GameBoard.gridSquare[i].gridSelection === '') {return}
         }
+        //Below code only runs if draw is detected:
+
         //Show draw
+        //*Update display*
+
+        //Set draw status to true
+        isADraw = true;
+
+        //Show play again button
         DisplayGUI.playAgain.classList.remove('hiddenDiv');
     }
 
@@ -305,8 +327,8 @@ const gamePlay = (function() {
         //Add to player scores
         if (currentTurn === 'X' && gamePlay.isAVictory === false) {playerX.score ++}
         if (currentTurn === 'O' && gamePlay.isAVictory === false) {playerO.score ++}
-        console.log(`${playerX.name}: ${playerX.score}`);
-        console.log(`${playerO.name}: ${playerO.score}`);
+        // console.log(`${playerX.name}: ${playerX.score}`);
+        // console.log(`${playerO.name}: ${playerO.score}`);
 
         //Set victory status to true
         gamePlay.isAVictory = true;
@@ -323,10 +345,12 @@ const gamePlay = (function() {
         playerO,
         currentTurn,
         isAVictory,
+        isADraw,
         changeTurn,
         testPlacement,
         updateSquare,
         showHover,
         checkTurn,
+        resetTurns,
     }
 })();
