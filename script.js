@@ -70,6 +70,7 @@ const GameBoard = (function(doc) {
         gamePlay.isADraw = false;
         gamePlay.currentTurn = 'X';
         gamePlay.resetTurns();
+        DisplayGUI.gameMessage.textContent = '';
 
         //Set each object's gridSelection to blank and update display
         gridSquare.forEach((obj) => {
@@ -103,6 +104,7 @@ const DisplayGUI = (function(doc) {
     const player2Input = doc.getElementById('player2');
     const player1Display = doc.getElementById('player1score');
     const player2Display = doc.getElementById('player2score');
+    const gameMessage = doc.getElementById('gameMessage');
 
     //Hide play again button by default
     playAgain.classList.add('hiddenDiv');
@@ -158,6 +160,7 @@ const DisplayGUI = (function(doc) {
         player1Input,
         player2Input,
         displayScores,
+        gameMessage,
         playAgain,
     }
 })(document);
@@ -315,6 +318,9 @@ const gamePlay = (function() {
         //Set draw status to true
         isADraw = true;
 
+        //Show tie message
+        DisplayGUI.gameMessage.textContent = `Draw!`;
+
         //Show play again button
         DisplayGUI.playAgain.classList.remove('hiddenDiv');
     }
@@ -325,8 +331,14 @@ const gamePlay = (function() {
         GameBoard.showWinningCombo(winningSpaces);
 
         //Add to player scores
-        if (currentTurn === 'X' && gamePlay.isAVictory === false) {playerX.score ++}
-        if (currentTurn === 'O' && gamePlay.isAVictory === false) {playerO.score ++}
+        if (currentTurn === 'X' && gamePlay.isAVictory === false) {
+            playerX.score ++;
+            DisplayGUI.gameMessage.textContent = `${playerX.name} wins!`;
+        }
+        if (currentTurn === 'O' && gamePlay.isAVictory === false) {
+            playerO.score ++;
+            DisplayGUI.gameMessage.textContent = `${playerO.name} wins!`;
+        }
         // console.log(`${playerX.name}: ${playerX.score}`);
         // console.log(`${playerO.name}: ${playerO.score}`);
 

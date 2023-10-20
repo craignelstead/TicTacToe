@@ -2,15 +2,76 @@
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
+    --darkgray: #B4B8AB;
+    --darkblue: #153243;
+    --lightblue: #284B63;
+    --eggwhite: #F4F9E9;
+    --lightgray: #EEF0EB;
 }
 
 body {
     display: grid;
-    grid-template-rows: 1fr 2fr;
+    grid-template-rows: 1fr 1fr;
+    background-color: var(--eggwhite);
+    justify-items: center;
+    padding: 25px;
+    gap: 25px;
 }
 
 #gamecontrol {
-    background-color: aqua;
+    height: 300px;
+}
+
+#setupGame {
+  display: grid;
+  grid-template: 1fr 1fr / 1fr 1fr;
+  grid-template-areas: 
+    "p1 p2"
+    "button button";
+}
+
+#player1 {
+  grid-area: p1;
+}
+
+#player2 {
+  grid-area: p2;
+}
+
+#startGame {
+  grid-area: button;
+}
+
+button {
+  height: 40px;
+  width: 90px;
+  border-radius: 5px;
+}
+
+#scoreboard {
+  display: grid;
+  grid-template: 1fr 1fr 1fr 1fr / 1fr;
+  grid-template-areas: 
+    "message"
+    "p1"
+    "p2"
+    "button";
+}
+
+#gameMessage {
+  grid-area: message;
+}
+
+#player1score {
+  grid-area: p1;
+}
+
+#player2score {
+  grid-area: p2;
+}
+
+#playAgain {
+  grid-area: button;
 }
 
 .hiddenDiv {
@@ -32,7 +93,7 @@ body {
 }
 
 .tttsquare {
-    border: solid 2px black;
+    border: solid 2px var(--darkblue);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,24 +107,6 @@ body {
 }
 
 .winningCombo {
-    color: red;
+    color: var(--lightgray);
+    background-color: var(--lightblue);
 }
-
-/* .winningCombo::after {
-    animation: 2s anim-popoutin ease;
-} */
-
-  /* @keyframes anim-popoutin {
-    0% {
-      transform: scale(0);
-    }
-    25% {
-      transform: scale(2);
-    }
-    50% {
-      transform: scale(1);
-    }
-    100% {
-      transform: scale(1);
-    }
-  } */
