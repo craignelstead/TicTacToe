@@ -223,6 +223,11 @@ const gamePlay = (function() {
         if (currentTurn === 'X' && 
             gamePlay.isAVictory === false && gamePlay.isADraw === false) {
                 currentTurn = 'O';
+
+            //Call computer to take a turn;
+            if (gamePlay.playerO.type === 'computer') {
+                gamePlay.computerTurn();
+            }
         }
         else if (currentTurn === 'O' && 
             gamePlay.isAVictory === false && gamePlay.isADraw === false) {
@@ -380,8 +385,29 @@ const gamePlay = (function() {
     }
 
     //Computer player logic
-    function computerTurn() {
+    function computerTurn() {    
+        let compSelection;
+        let valid = false;
 
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+        do {
+            //Get a random number
+            compSelection = getRandomInt(0, 10);
+            console.log(compSelection);
+
+            //Check to see if the space is blank
+            if (GameBoard.gridSquare[compSelection].gridSelection === '') {
+                testPlacement(GameBoard.gridSquare[compSelection]);
+                valid = true;
+            }            
+        }
+        while (valid === false);
+        
     }
 
     return {
@@ -396,5 +422,6 @@ const gamePlay = (function() {
         showHover,
         checkTurn,
         resetTurns,
+        computerTurn,
     }
 })();
