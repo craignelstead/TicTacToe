@@ -115,6 +115,21 @@ const DisplayGUI = (function(doc) {
         div2.classList.remove('hiddenDiv');
     }
 
+    //Display whose turn it is
+    function showTurn() {
+        //Don't show current turn if game is over
+        if (gamePlay.isAVictory === true || gamePlay.isADraw === true) return;
+        console.log(`In DisplayGUI.showTurn: ${gamePlay.currentTurn}`);
+        switch(gamePlay.currentTurn) {
+            case 'X':
+                gameMessage.textContent = `${gamePlay.playerX.name}'s turn`;
+                break;
+            case 'O':
+                gameMessage.textContent = `${gamePlay.playerO.name}'s turn`;
+                break;
+        }
+    }
+
     //Add event listener to start game button and play again button
     startGame.addEventListener('click', checkInputs);
     playAgain.addEventListener('click', GameBoard.clearBoard);
@@ -162,17 +177,20 @@ const DisplayGUI = (function(doc) {
         displayScores,
         gameMessage,
         playAgain,
+        showTurn,
     }
 })(document);
 
 //Factory function to create each player
-const Player = (input) => {
+const Player = (input, humanOrComp) => {
     let name = input;
     let score = 0;
+    let type = humanOrComp;
 
     return {
         name,
         score,
+        type,
     }
 }
 
@@ -180,15 +198,19 @@ const Player = (input) => {
 const gamePlay = (function() {
 
     //Initialize players
-    const playerX = Player(DisplayGUI.player1Input.value);
-    const playerO = Player(DisplayGUI.player2Input.value);
+    const playerX = Player(DisplayGUI.player1Input.value, 'human');
+    const playerO = Player(DisplayGUI.player2Input.value, 'computer');
 
     //Set victory & draw status to false by default
     let isAVictory = false;
     let isADraw = false;
 
     //Default so player X goes first
-    let currentTurn = 'X';
+    let currentTurn;
+    resetTurns();
+
+    //Show first turn
+    //DisplayGUI.showTurn();
 
     //Check whose turn it is
     function checkTurn() {
@@ -197,6 +219,7 @@ const gamePlay = (function() {
 
     //Change turn to other player
     function changeTurn() {
+        console.log(`Before: ${currentTurn}`);
         if (currentTurn === 'X' && 
             gamePlay.isAVictory === false && gamePlay.isADraw === false) {
                 currentTurn = 'O';
@@ -205,6 +228,10 @@ const gamePlay = (function() {
             gamePlay.isAVictory === false && gamePlay.isADraw === false) {
                 currentTurn = 'X';
         }
+        console.log(`After: ${currentTurn}`);
+
+        //Show whose turn it is
+        DisplayGUI.showTurn();
     }
     
     //Check if valid placement
@@ -350,6 +377,11 @@ const gamePlay = (function() {
 
         //Show play again button
         DisplayGUI.playAgain.classList.remove('hiddenDiv');
+    }
+
+    //Computer player logic
+    function computerTurn() {
+
     }
 
     return {
