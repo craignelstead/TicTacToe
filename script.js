@@ -149,9 +149,9 @@ const DisplayGUI = (function(doc) {
 
     function displayScores() {
         player1Display.textContent = 
-            `${gamePlay.playerX.name}: ${gamePlay.playerX.score}`;
+            `${gamePlay.playerX.name} (X): ${gamePlay.playerX.score}`;
         player2Display.textContent = 
-            `${gamePlay.playerO.name}: ${gamePlay.playerO.score}`;
+            `${gamePlay.playerO.name} (O): ${gamePlay.playerO.score}`;
     }
 
     toggleDivs(scoreBoard, setupGame);

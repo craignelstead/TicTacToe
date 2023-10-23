@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Open+Sans:wght@300&family=Oswald:wght@700&family=Oxygen:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="gametitle">
+        <h1>Tic Tac Toe</h1>
+    </div>
     <div id="gamecontrol">
         <div id="setupGame">
             <input type="text" id="player1" value="Player X">
@@ -14,9 +20,9 @@
             <button id="startGame">Start Game</button>
         </div>
         <div id="scoreboard">
-            <h1 id="gameMessage"></h1>
-            <h1 id="player1score"></h1>
-            <h1 id="player2score"></h1>
+            <h2 id="gameMessage"> </h2>
+            <h3 id="player1score"> </h3>
+            <h3 id="player2score"> </h3>
             <button id="playAgain">Play Again</button>
         </div>
     </div>
