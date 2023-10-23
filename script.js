@@ -15,12 +15,14 @@ const GameBoard = (function(doc) {
         //Event listener will check the current status of each square
         currentSquare.addEventListener('click', function() {
             //Check if square is X, O, or blank
-            gamePlay.testPlacement(gridSquare[squareNum]);
+            if (gamePlay.checkTurn() === 'X') {
+                gamePlay.testPlacement(gridSquare[squareNum]);
+            }
         });
 
         //Add event listener to add hover effect to blank square on hover
         currentSquare.addEventListener('mouseover', function() {
-            if (currentSquare.textContent === '') {
+            if (currentSquare.textContent === '' && gamePlay.checkTurn() ==='X') {
                 gamePlay.showHover(currentSquare);
             }
         });
@@ -120,7 +122,7 @@ const DisplayGUI = (function(doc) {
         //Don't show current turn if game is over
         if (gamePlay.isAVictory === true || gamePlay.isADraw === true) return;
         console.log(`In DisplayGUI.showTurn: ${gamePlay.currentTurn}`);
-        switch(gamePlay.currentTurn) {
+        switch(gamePlay.checkTurn()) {
             case 'X':
                 gameMessage.textContent = `${gamePlay.playerX.name}'s turn`;
                 break;
@@ -155,6 +157,7 @@ const DisplayGUI = (function(doc) {
             (player2Input.value.length > 0 && player2Input.value.length <= 20)) {
             GameBoard.playingArea.classList.remove('hiddenDiv');
             toggleDivs(setupGame, scoreBoard);
+            showTurn();
             displayScores();
         }
         else {
@@ -162,6 +165,7 @@ const DisplayGUI = (function(doc) {
         }
     }
 
+    //Updates the scoreboard
     function displayScores() {
         player1Display.textContent = 
             `${gamePlay.playerX.name} (X): ${gamePlay.playerX.score}`;
@@ -388,26 +392,30 @@ const gamePlay = (function() {
     function computerTurn() {    
         let compSelection;
         let valid = false;
+        console.log(gamePlay.isADraw);
+        console.log(gamePlay.isAVictory);
+        if (gamePlay.isAVictory === true || gamePlay.isADraw === true) {return}
 
         function getRandomInt(min, max) {
             min = Math.ceil(min);
             max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min) + min);
+            return Math.floor(Math.random() * (max - min + 1) + min);
         }
 
         do {
             //Get a random number
-            compSelection = getRandomInt(0, 10);
+            compSelection = getRandomInt(0, 8);
             console.log(compSelection);
-
             //Check to see if the space is blank
             if (GameBoard.gridSquare[compSelection].gridSelection === '') {
-                testPlacement(GameBoard.gridSquare[compSelection]);
                 valid = true;
             }            
         }
         while (valid === false);
-        
+
+        setTimeout(function(){
+            testPlacement(GameBoard.gridSquare[compSelection]);
+        }, 1000);
     }
 
     return {
