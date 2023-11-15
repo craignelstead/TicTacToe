@@ -73,6 +73,7 @@ const GameBoard = (function(doc) {
         gamePlay.currentTurn = 'X';
         gamePlay.resetTurns();
         DisplayGUI.gameMessage.textContent = '';
+        DisplayGUI.showTurn();
 
         //Set each object's gridSelection to blank and update display
         gridSquare.forEach((obj) => {
@@ -107,6 +108,7 @@ const DisplayGUI = (function(doc) {
     const player1Display = doc.getElementById('player1score');
     const player2Display = doc.getElementById('player2score');
     const gameMessage = doc.getElementById('gameMessage');
+    const restartGame = doc.getElementById('restart');
 
     //Hide play again button by default
     playAgain.classList.add('hiddenDiv');
@@ -121,7 +123,6 @@ const DisplayGUI = (function(doc) {
     function showTurn() {
         //Don't show current turn if game is over
         if (gamePlay.isAVictory === true || gamePlay.isADraw === true) return;
-        console.log(`In DisplayGUI.showTurn: ${gamePlay.currentTurn}`);
         switch(gamePlay.checkTurn()) {
             case 'X':
                 gameMessage.textContent = `${gamePlay.playerX.name}'s turn`;
@@ -213,9 +214,6 @@ const gamePlay = (function() {
     let currentTurn;
     resetTurns();
 
-    //Show first turn
-    //DisplayGUI.showTurn();
-
     //Check whose turn it is
     function checkTurn() {
         return currentTurn;
@@ -223,24 +221,25 @@ const gamePlay = (function() {
 
     //Change turn to other player
     function changeTurn() {
-        console.log(`Before: ${currentTurn}`);
-        if (currentTurn === 'X' && 
+        if (checkTurn() === 'X' && 
             gamePlay.isAVictory === false && gamePlay.isADraw === false) {
                 currentTurn = 'O';
+
+            //Show whose turn it is
+            DisplayGUI.showTurn();
 
             //Call computer to take a turn;
             if (gamePlay.playerO.type === 'computer') {
                 gamePlay.computerTurn();
             }
         }
-        else if (currentTurn === 'O' && 
+        else if (checkTurn() === 'O' && 
             gamePlay.isAVictory === false && gamePlay.isADraw === false) {
                 currentTurn = 'X';
-        }
-        console.log(`After: ${currentTurn}`);
 
-        //Show whose turn it is
-        DisplayGUI.showTurn();
+            //Show whose turn it is
+            DisplayGUI.showTurn();
+        }
     }
     
     //Check if valid placement
@@ -250,7 +249,9 @@ const gamePlay = (function() {
             gamePlay.isAVictory === false) {
             updateSquare(placement);
             checkForWin();
-            changeTurn();
+            if(gamePlay.isAVictory === false && gamePlay.isADraw === false) {
+                changeTurn();
+            }
         }
     }
 
@@ -392,8 +393,7 @@ const gamePlay = (function() {
     function computerTurn() {    
         let compSelection;
         let valid = false;
-        console.log(gamePlay.isADraw);
-        console.log(gamePlay.isAVictory);
+
         if (gamePlay.isAVictory === true || gamePlay.isADraw === true) {return}
 
         function getRandomInt(min, max) {
@@ -401,17 +401,20 @@ const gamePlay = (function() {
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min + 1) + min);
         }
-
+        let i = 0;
         do {
             //Get a random number
+            i++;
             compSelection = getRandomInt(0, 8);
-            console.log(compSelection);
+            console.log(compSelection + 1);
             //Check to see if the space is blank
             if (GameBoard.gridSquare[compSelection].gridSelection === '') {
                 valid = true;
             }            
         }
-        while (valid === false);
+        while (valid === false && i < 100);
+
+        valid = false;
 
         setTimeout(function(){
             testPlacement(GameBoard.gridSquare[compSelection]);
